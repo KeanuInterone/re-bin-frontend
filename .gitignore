@@ -21,3 +21,9 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# Stuff for local https
+.env
+cert.pem
+key.pem
+ssl.pem
