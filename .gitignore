@@ -26,4 +26,4 @@ yarn-error.log*
 .env
 cert.pem
 key.pem
-ssl.pem
+ssl
