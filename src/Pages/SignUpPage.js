@@ -26,37 +26,37 @@ const SignUpPage = () => {
             <form onSubmit={handleSubmit}>
                 <h2>Sign Up</h2>
                 {error && <p className="error">{error}</p>}
-                <div>
-                    <label>Email:</label>
+                <div className='form-group'>
                     <input
                         type="email"
+                        placeholder='Email'
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         required
                     />
                 </div>
-                <div>
-                    <label>Password:</label>
+                <div className='form-group'>
                     <input
                         type="password"
+                        placeholder='Password'
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         required
                     />
                 </div>
-                <div>
-                    <label>First Name:</label>
+                <div className='form-group'>
                     <input
                         type="text"
+                        placeholder='First Name'
                         value={firstName}
                         onChange={(e) => setFirstName(e.target.value)}
                         required
                     />
                 </div>
-                <div>
-                    <label>Last Name:</label>
+                <div className='form-group'>
                     <input
                         type="text"
+                        placeholder='Last Name'
                         value={lastName}
                         onChange={(e) => setLastName(e.target.value)}
                         required
