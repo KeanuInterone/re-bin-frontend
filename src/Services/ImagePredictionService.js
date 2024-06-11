@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 
+const recyclables = ['Plastic', 'Paper/Cardboard', 'Metal', 'Glass'];
 export const useImagePrediction = () => {
     const [imageToPredict, setImageToPredict] = useState(null);
     const [isPredicting, setIsPredicting] = useState(false);
@@ -21,8 +22,7 @@ export const useImagePrediction = () => {
         .then(data => {
             setPrediction({
                 label: data['prediction'],
-                confidence: 0.69,
-                recyclable: true
+                recyclable: recyclables.includes(data['prediction'])
             });
             setIsPredicting(false);
         });

@@ -7,13 +7,15 @@ import ImagePredictionSlideUp from "../Components/ImagePredictionSlideUp";
 import RewardAnimation from "../Components/RewardAnimation";
 import IconButton from "../Components/IconButton";
 import { useAuth } from "../Services/AuthContext";
+import { useUser } from "../Services/UserContext";
 
 const ScanPage = () => {
 
     const [capturedImage, setCapturedImage] = useState(null);
     const [showReward, setShowReward] = useState(false);
     const navigate = useNavigate();
-    const { signOut } = useAuth();
+    const { signOut, accessToken } = useAuth();
+    const { user, scannedItem } = useUser();
 
     const handleCapture = (imageDataUrl) => {
         setCapturedImage(imageDataUrl);
@@ -26,6 +28,7 @@ const ScanPage = () => {
     const handleReward = () => {
         setCapturedImage(null);
         setShowReward(true);
+        scannedItem();
     };
 
     const handleAnimationEnd = () => {

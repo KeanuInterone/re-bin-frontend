@@ -62,14 +62,6 @@ export const confirmSignUp = async (email, confirmationCode) => {
     }
 };
 
-const extractUserFromToken = (token) => {
-    const user = {};
-    user.email = token.email;
-    user.firstName = token.given_name;
-    user.lastName = token.family_name;
-    return user;
-};
-
 const signIn = async (username, password) => {
     const url = getCognitoUrl();
     const data = {
@@ -92,7 +84,7 @@ const signIn = async (username, password) => {
         localStorage.setItem('accessToken', AccessToken);
         localStorage.setItem('idToken', IdToken);
         localStorage.setItem('refreshToken', RefreshToken);
-        return extractUserFromToken(jwtDecode(IdToken));
+        return true;
     } catch (error) {
         throw new Error(error.response.data.message || 'Error during sign in');
     }
@@ -104,13 +96,13 @@ const signOut = () => {
     localStorage.removeItem('refreshToken');
 };
 
-const checkAuth = () => {
-    const idToken = localStorage.getItem('idToken');
-    if (idToken) {
+const hasValidAuthToken = () => {
+    const accessToken = localStorage.getItem('accessToken');
+    if (accessToken) {
         try {
-            const decodedToken = jwtDecode(idToken);
+            const decodedToken = jwtDecode(accessToken);
             if (decodedToken.exp * 1000 > Date.now()) {
-                return decodedToken;
+                return true;
             } else {
                 signOut();
             }
@@ -118,17 +110,17 @@ const checkAuth = () => {
             signOut();
         }
     }
-    return null;
+    return false;
 };
 
 export const AuthProvider = ({ children }) => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
-    const [user, setUser] = useState(null);
+    const [accessToken, setAccessToken] = useState(null);
 
     useEffect(() => {
-        const session = checkAuth();
-        if (session) {
+        if (hasValidAuthToken()) {
             setIsAuthenticated(true);
+            setAccessToken(localStorage.getItem('accessToken'));
         }
     }, []);
 
@@ -141,19 +133,27 @@ export const AuthProvider = ({ children }) => {
     }, []);
 
     const handleSignIn = useCallback(async (username, password) => {
-        const user = await signIn(username, password);
-        setIsAuthenticated(true);
-        setUser(user);
+        if (await signIn(username, password)) {
+            setIsAuthenticated(true);
+            setAccessToken(localStorage.getItem('accessToken'));
+            console.log('Access token:', localStorage.getItem('accessToken'));
+        }
     }, []);
 
     const handleSignOut = useCallback(() => {
         signOut();
         setIsAuthenticated(false);
-        setUser(null);
     }, []);
 
     return (
-        <AuthContext.Provider value={{ isAuthenticated, user, signUp: handleSignUp, confirmSignUp: handleConfirmSignUp, signIn: handleSignIn, signOut: handleSignOut }}>
+        <AuthContext.Provider value={{
+            isAuthenticated,
+            accessToken,
+            signUp: handleSignUp,
+            confirmSignUp: handleConfirmSignUp,
+            signIn: handleSignIn,
+            signOut: handleSignOut
+        }}>
             {children}
         </AuthContext.Provider>
     );

@@ -384,8 +384,8 @@ body {
 }
 
 .preview-image {
-  width: 200px;
-  height: 200px;
+  max-width: 200px;
+  max-height: 200px;
   border-radius: 10px;
   border: #232323 solid 2px;
   object-fit: cover;
@@ -410,18 +410,29 @@ body {
 .prediction-label-container {
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: space-between;
+  align-items: center;
   height: 100%;
+  width: 100%;
 }
-
 
 .prediction {
   display: flex;
   justify-content: space-between;
   align-items: center;
   color: white;
-  width: 200px;
+  /* width: 200px; */
+  margin-bottom: 10px;
+}
+
+.non-user-recycle-buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.login-link {
+  color: var(--text-color-light);
   margin-bottom: 10px;
 }
 
