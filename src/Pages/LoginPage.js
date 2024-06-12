@@ -34,6 +34,7 @@ const LoginPage = () => {
 
     return (
         <div className="login-container">
+            <img src={"/rebin-logo-transparent.png"} alt="icon" className="logo-image" />
             <CanLoad isLoading={isLoading}>
                 <form onSubmit={handleSubmit}>
                     <h2 className='login-title'>Login</h2>

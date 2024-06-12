@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../Services/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import IconButton from '../Components/IconButton';
 
 const SignUpPage = () => {
     const [email, setEmail] = useState('');
@@ -23,6 +24,10 @@ const SignUpPage = () => {
 
     return (
         <div className="sign-up-container">
+            <IconButton 
+                iconPath="/icons/back_arrow.png"
+                className="back-icon"
+                onPressed={() => navigate('/login')} />
             <form onSubmit={handleSubmit}>
                 <h2>Sign Up</h2>
                 {error && <p className="error">{error}</p>}
@@ -62,7 +67,7 @@ const SignUpPage = () => {
                         required
                     />
                 </div>
-                <button type="submit">Sign Up</button>
+                <button className='sign-up-button' type="submit">Sign Up</button>
             </form>
         </div>
     );

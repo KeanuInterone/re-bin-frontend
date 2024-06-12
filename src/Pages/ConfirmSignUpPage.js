@@ -24,15 +24,18 @@ const ConfirmSignUpPage = () => {
         <div className="confirm-sign-up-container">
             <form onSubmit={handleSubmit}>
                 <h2>Confirm Sign Up</h2>
+                <p>A code was sent to {email}</p>
                 {error && <p className="error">{error}</p>}
                 <div>
-                    <label>Confirmation Code:</label>
-                    <input
-                        type="text"
-                        value={confirmationCode}
-                        onChange={(e) => setConfirmationCode(e.target.value)}
-                        required
-                    />
+                    <div className="form-group">
+                        <input
+                            placeholder='Confirmation Code'
+                            type="text"
+                            value={confirmationCode}
+                            onChange={(e) => setConfirmationCode(e.target.value)}
+                            required
+                        />
+                    </div>
                 </div>
                 <button type="submit">Confirm</button>
             </form>

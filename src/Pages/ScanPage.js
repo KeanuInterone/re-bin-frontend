@@ -37,18 +37,20 @@ const ScanPage = () => {
 
     return (
         <div className="app">
-            <ReBinLogo />
-            <IconButton 
+            <div className="scan-logo-container">
+                <ReBinLogo />
+            </div>
+            <IconButton
                 iconPath="/icons/user_icon.png"
                 className="user-icon"
                 onPressed={() => {
                     //signOut();
                     navigate('/profile')
-                }} 
+                }}
             />
-            <CameraFeed onCapture={handleCapture}/>
+            <CameraFeed onCapture={handleCapture} />
             <CenterIndicator />
-            <ImagePredictionSlideUp imageUrl={capturedImage} onClose={handleClose} onReward={handleReward}/>
+            <ImagePredictionSlideUp imageUrl={capturedImage} onClose={handleClose} onReward={handleReward} />
             {showReward && <RewardAnimation onAnimationEnd={handleAnimationEnd} />}
         </div>
     );
