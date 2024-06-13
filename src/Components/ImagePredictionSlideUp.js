@@ -9,11 +9,32 @@ const ImagePredictionSlideUp = ({ imageUrl, onClose, onReward }) => {
     const { setImageToPredict, isPredicting, prediction } = useImagePrediction();
     const { isAuthenticated } = useAuth();
     const { user } = useUser();
+    const [hasVerifiedPrediction, setHasVerifiedPrediction] = useState(false);
+    const [isCorrect, setIsCorrect] = useState(false);
+    const labels = ['Plastic', 'Paper/Cardboard', 'Metal', 'Glass', 'Organic', 'Other'];
 
     useEffect(() => {
         if (!imageUrl) return;
         setImageToPredict(imageUrl);
+        setHasVerifiedPrediction(false);
     }, [imageUrl]);
+
+    const verifyPrediction = (isCorrect) => {
+        if (isCorrect) {
+            // Add points to user
+            setIsCorrect(true);
+            setHasVerifiedPrediction(true);
+        } else {
+            // Deduct points from user
+            setIsCorrect(false);
+            setHasVerifiedPrediction(true);
+        }
+    }
+
+    const labelImage = (label) => {
+        console.log(label);
+        setIsCorrect(true);
+    }
 
     return (
         <div className={`prediction-container ${imageUrl ? 'slide-up' : ''}`}>
@@ -25,8 +46,39 @@ const ImagePredictionSlideUp = ({ imageUrl, onClose, onReward }) => {
                     {prediction && (
                         <div className='prediction-label-container'>
                             <div className="prediction">
-                                <h2>{prediction.label}</h2>
+                                {
+                                    (!hasVerifiedPrediction || isCorrect) && (
+                                        <h2 className='prediction-label'>{prediction.label}</h2>
+                                    )
+                                }
+
+                                {
+                                    (isAuthenticated && user && user.permissions.includes('can_verify_prediction') && !hasVerifiedPrediction) && (
+                                        <div className="prediction-verify">
+                                            <button className="prediction-verify-button correct" onClick={() => { verifyPrediction(true) }}>Correct</button>
+                                            <button className="prediction-verify-button incorrect" onClick={() => { verifyPrediction(false) }}>Incorrect</button>
+                                        </div>
+                                    )
+                                }
+                                {
+                                    (isAuthenticated && user && user.permissions.includes('can_verify_prediction') && hasVerifiedPrediction && isCorrect) && (
+                                        <img className="correct-checkmark" src={"/icons/correct.png"} alt="icon" />
+                                    )
+                                }
+                                {
+                                    (isAuthenticated && user && user.permissions.includes('can_verify_prediction') && hasVerifiedPrediction && !isCorrect) && (
+                                        <div className='correction-labels-container'>
+                                            <p>Select the correct label</p>
+                                            <div className='correction-labels'>
+                                                {labels.map((label, index) => (
+                                                    <button key={index} className="correction-label-button" onClick={() => {labelImage(label)}}>{label}</button>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )
+                                }
                             </div>
+
                             {isAuthenticated && (
                                 <div className='user-recycle-buttons'>
                                     {prediction.recyclable ? (

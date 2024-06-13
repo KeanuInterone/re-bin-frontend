@@ -5,6 +5,7 @@
   --background-color: #333;
   --text-color-dark: black;
   --text-color-light: white;
+  --red-color: #ff5252;
 }
 
 body {
@@ -462,12 +463,12 @@ body {
 }
 
 .preview-image {
-  max-width: 200px;
-  max-height: 200px;
+  width: 150px;
+  height: 150px;
   border-radius: 10px;
   border: #232323 solid 2px;
   object-fit: cover;
-  margin-bottom: 40px;
+  margin-bottom: 10px;
 }
 
 .loading {
@@ -496,11 +497,82 @@ body {
 
 .prediction {
   display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  color: white;
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.prediction-label {
+  margin: 5px;
+}
+
+.prediction-verify {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.prediction-verify-button {
+  color: var(--text-color-light);
+  border: none;
+  width: 50%;
+  height: 40px;
+  padding: 10px 20px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 16px;
+  margin: 5px;
+}
+
+.correct {
+  background-color: var(--primary-color);
+}
+
+.incorrect {
+  background-color: var(--red-color);
+}
+
+.correct-checkmark {
+  width: 50px;
+  background-color: white;
+  border-radius: 30px;
+  padding: 5px
+}
+
+.correction-labels-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+}
+
+.correction-labels {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
   color: white;
   /* width: 200px; */
   margin-bottom: 10px;
+}
+
+.correction-label-button {
+  color: var(--text-color-light);
+  background-color: var(--background-color);
+  border: none;
+  width: 45%;
+  height: 40px;
+  padding: 10px 20px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 16px;
+  margin: 5px;
 }
 
 .non-user-recycle-buttons {
