@@ -6,34 +6,43 @@ import { useUser } from '../Services/UserContext';
 
 const ImagePredictionSlideUp = ({ imageUrl, onClose, onReward }) => {
 
-    const { setImageToPredict, isPredicting, prediction } = useImagePrediction();
-    const { isAuthenticated } = useAuth();
+    const { setImageToPredict, correctPredictionLabel, sendExampleToServer, isPredicting, prediction } = useImagePrediction();
+    const { isAuthenticated, accessToken } = useAuth();
     const { user } = useUser();
-    const [hasVerifiedPrediction, setHasVerifiedPrediction] = useState(false);
-    const [isCorrect, setIsCorrect] = useState(false);
+    const userCanVerifyPrediction = isAuthenticated && user && user.permissions?.includes('can_verify_prediction');
+    const [showPredictionLabel, setShowPredictionLabel] = useState(false);
+    const [showCorrectIncorrectButtons, setShowCorrectIncorrectButtons] = useState(userCanVerifyPrediction);
+    const [showCheckmark, setShowCheckmark] = useState(false);
+    const [showSelectCorrectLabelContainer, setShowSelectCorrectLabelContainer] = useState(false);
     const labels = ['Plastic', 'Paper/Cardboard', 'Metal', 'Glass', 'Organic', 'Other'];
 
     useEffect(() => {
         if (!imageUrl) return;
         setImageToPredict(imageUrl);
-        setHasVerifiedPrediction(false);
+        setShowPredictionLabel(true);
+        setShowCorrectIncorrectButtons(userCanVerifyPrediction);
+        setShowCheckmark(false);
+        setShowSelectCorrectLabelContainer(false);
     }, [imageUrl]);
 
     const verifyPrediction = (isCorrect) => {
         if (isCorrect) {
-            // Add points to user
-            setIsCorrect(true);
-            setHasVerifiedPrediction(true);
+            setShowCorrectIncorrectButtons(false);
+            setShowCheckmark(true);
+            sendExampleToServer(accessToken, prediction.label);
         } else {
-            // Deduct points from user
-            setIsCorrect(false);
-            setHasVerifiedPrediction(true);
+            setShowPredictionLabel(false);
+            setShowCorrectIncorrectButtons(false);
+            setShowSelectCorrectLabelContainer(true);
         }
     }
 
     const labelImage = (label) => {
-        console.log(label);
-        setIsCorrect(true);
+        correctPredictionLabel(label);
+        setShowPredictionLabel(true);
+        setShowSelectCorrectLabelContainer(false);
+        setShowCheckmark(true);
+        sendExampleToServer(accessToken, label);
     }
 
     return (
@@ -47,13 +56,13 @@ const ImagePredictionSlideUp = ({ imageUrl, onClose, onReward }) => {
                         <div className='prediction-label-container'>
                             <div className="prediction">
                                 {
-                                    (!hasVerifiedPrediction || isCorrect) && (
+                                    (showPredictionLabel) && (
                                         <h2 className='prediction-label'>{prediction.label}</h2>
                                     )
                                 }
 
                                 {
-                                    (isAuthenticated && user && user.permissions.includes('can_verify_prediction') && !hasVerifiedPrediction) && (
+                                    (showCorrectIncorrectButtons) && (
                                         <div className="prediction-verify">
                                             <button className="prediction-verify-button correct" onClick={() => { verifyPrediction(true) }}>Correct</button>
                                             <button className="prediction-verify-button incorrect" onClick={() => { verifyPrediction(false) }}>Incorrect</button>
@@ -61,12 +70,12 @@ const ImagePredictionSlideUp = ({ imageUrl, onClose, onReward }) => {
                                     )
                                 }
                                 {
-                                    (isAuthenticated && user && user.permissions.includes('can_verify_prediction') && hasVerifiedPrediction && isCorrect) && (
+                                    (showCheckmark) && (
                                         <img className="correct-checkmark" src={"/icons/correct.png"} alt="icon" />
                                     )
                                 }
                                 {
-                                    (isAuthenticated && user && user.permissions.includes('can_verify_prediction') && hasVerifiedPrediction && !isCorrect) && (
+                                    (showSelectCorrectLabelContainer) && (
                                         <div className='correction-labels-container'>
                                             <p>Select the correct label</p>
                                             <div className='correction-labels'>

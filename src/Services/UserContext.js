@@ -22,7 +22,7 @@ export const UserProvider = ({ children }) => {
                 },
             );
             setUser(response.data);
-            console.log('User:', response.data)
+            //console.log('User:', response.data)
         } catch (error) {
             console.error('Error fetching user:', error);
             throw new Error('Error fetching user data.');

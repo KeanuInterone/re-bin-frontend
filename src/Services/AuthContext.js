@@ -136,7 +136,7 @@ export const AuthProvider = ({ children }) => {
         if (await signIn(username, password)) {
             setIsAuthenticated(true);
             setAccessToken(localStorage.getItem('accessToken'));
-            console.log('Access token:', localStorage.getItem('accessToken'));
+            //console.log('Access token:', localStorage.getItem('accessToken'));
         }
     }, []);
 
